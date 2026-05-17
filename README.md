@@ -43,7 +43,11 @@ python3 -m http.server 8000
 
 Click the `🔇 OFF` button in the header to toggle to `🔊 ON`. The narration for the active section auto-plays, and swaps when you change sections. Voice: `en-US-AvaMultilingualNeural` via `edge-tts`, matching the v2 deployment.
 
-## To deploy on GitHub Pages (matches v2 pattern)
+## Live URL
+
+**https://mayasss-gif.github.io/BiRAGAS-Investors-Elevator-Pitch/**
+
+## Deployment commands used (for reference)
 
 ```bash
 cd "/Users/mohamadammarayass/Desktop/Ayass _ Strategic Planning/Pitch/Elevator Pitch"
