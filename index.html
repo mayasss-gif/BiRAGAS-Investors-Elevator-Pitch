@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>BiRAGAS Investors Elevator Pitch · Q&A Playbook</title>
+<meta name="description" content="Nine investor questions, nine direct answers — the BiRAGAS elevator pitch in Q&A format, with audio narration.">
+<style>
+  html, body, #root { height: 100%; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    background: #0A0A0A;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  #boot {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: #0A0A0A; color: #F5F0E8;
+    z-index: 0;
+  }
+  #boot .logo { font-size: 32px; font-weight: 800; letter-spacing: -1px; color: #F5F0E8; }
+  #boot .tag  { font-size: 11px; color: #888; margin-top: 8px; letter-spacing: 2px; font-family: monospace; }
+  #boot .spinner {
+    margin-top: 24px;
+    width: 22px; height: 22px;
+    border: 2px solid #333;
+    border-top-color: #C8102E;
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: #0A0A0A; }
+  ::-webkit-scrollbar-thumb { background: #222; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #333; }
+</style>
+</head>
+<body>
+<div id="boot">
+  <div class="logo">BiRAGAS</div>
+  <div class="tag">INVESTORS ELEVATOR PITCH · Q&A PLAYBOOK · LOADING</div>
+  <div class="spinner"></div>
+</div>
+<div id="root"></div>
+
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<script type="text/babel" data-presets="react,env">
+const { useState, useEffect, useRef } = React;
+
+const sections = [
+  {
+    id: "q1", number: 1, label: "Problems Addressed",
+    subtitle: "Five expensive, interlocking failures",
+    color: "#C8102E",
+    headline: "What are the problems we are addressing — name five.",
+    intro: "Each one BiRAGAS was built to break.",
+    bullets: [
+      {lead: "① Catastrophic clinical failure rate.", body: "Ninety percent of drugs that enter clinical trials fail. The dirty secret: most failures aren't random — they're predictable. The wrong target was chosen at the very beginning, costing the sponsor on average two billion dollars and a decade of work per failed program."},
+      {lead: "② Correlation-only tooling.", body: "The entire biomedical research infrastructure — genomics platforms, sequencing tools, expression profiling — generates association data. It tells you Gene A and Gene B move together in disease. It cannot tell you which one is the driver and which is a passenger. A drug aimed at a passenger never works."},
+      {lead: "③ FDA evidence gap.", body: "FDA guidance has shifted: regulators now explicitly require mechanistic, causal evidence to support therapeutic claims. Most discovery platforms were never built to produce that evidence and cannot retrofit it."},
+      {lead: "④ Bioinformatician bottleneck.", body: "Today's omics tools require a trained bioinformatician to drive them. That throttles the addressable user from every translational scientist down to the few who can run a pipeline. Drug-development velocity is throttled by tooling, not biology."},
+      {lead: "⑤ Fragmented, unauditable pipelines.", body: "Discovery teams stitch together FASTQ aligners, DEG callers, pathway tools, and CRISPR analytics from different vendors. No shared provenance, no auditable chain, no FDA-submittable dossier — every handoff is a place where evidence dies."}
+    ]
+  },
+  {
+    id: "q2", number: 2, label: "Major Competitors",
+    subtitle: "Named, with positioning",
+    color: "#1A1A2E",
+    headline: "What our major competitors have done or are doing — named.",
+    intro: "The AI-drug-discovery field is crowded, but it is crowded downstream of the problem BiRAGAS solves.",
+    bullets: [
+      {lead: "Recursion Pharmaceuticals.", body: "Phenomic screening + ML-driven molecular design. Operates downstream of target ID. Productive on optimization, silent on causal target validation."},
+      {lead: "Insilico Medicine.", body: "Generative chemistry and molecule design. Builds new molecules for already-chosen targets. Beautiful tooling, but presumes the target is right."},
+      {lead: "Schrödinger.", body: "Physics-based molecular simulation and lead optimization. The gold standard for downstream chemistry. Same blind spot upstream."},
+      {lead: "BenevolentAI.", body: "Knowledge-graph drug repurposing. Associative reasoning over biomedical literature — closer to BiRAGAS conceptually, but no mechanistic validation layer, no Mendelian randomization, no in-silico perturbation."},
+      {lead: "Tempus Labs.", body: "Clinical genomics correlation analytics at scale. Excellent at sequencing throughput; structurally a correlation engine."},
+      {lead: "Foundation Medicine (Roche).", body: "Molecular profiling and companion diagnostics. Tier-one infrastructure player, but profiling-first, not causation-first."},
+      {lead: "OpenAI · Google DeepMind biomedical efforts.", body: "General-purpose AI labs running biomedical experiments on association prediction. No regulatory architecture, no causal validation, no FDA-grade evidence dossier."}
+    ],
+    footnote: "Top-five players collectively held only 11.8% of the AI drug-discovery market in 2025. No dominant platform exists yet. The space is wide open at the layer BiRAGAS occupies."
+  },
+  {
+    id: "q3", number: 3, label: "How We Resolve",
+    subtitle: "Five operational answers, shipping today",
+    color: "#0D6E6E",
+    headline: "How are we going to resolve these — name five.",
+    intro: "Each already operating inside BiRAGAS.",
+    bullets: [
+      {lead: "① Four-stream convergence on one causal graph.", body: "Twenty-five modules, eight causal engines, three stacked tiers. T1 — Causal / Drug Target stack. T2 — Core analysis (DEG, GSEA, multi-omics, single-cell, temporal Granger, total RNA pipeline). T3 — Data and processing (FASTQ, harmonization, CRISPR Perturb-seq, screening, amplicon). One reasoning engine, end-to-end."},
+      {lead: "② Causal Confidence Scoring (CCS).", body: "Every output is ranked: Tier 1 Driver / Tier 2 Strong Candidate / Tier 3 Candidate. No black boxes. Source-linked at every step. Built to look exactly like the evidence an FDA reviewer expects."},
+      {lead: "③ FDA-aligned evidence dossier.", body: "Every output ships with a regulatory-grade evidence dossier. The architecture isn't bolted on — it is the architecture. FDA alignment as a product feature, not a service."},
+      {lead: "④ Causion — the agent layer.", body: "Natural-language agent that sits in front of all 25 modules. A scientist types a question — find DEGs, map causal edges for these genes, run temporal Granger — and Causion classifies intent, routes to the correct module, configures parameters, and returns the result. Bioinformatician no longer required."},
+      {lead: "⑤ End-to-end chained pipeline.", body: "FASTQ to FDA-ready causal target dossier in one engine. T3 ingests and harmonizes. T2 runs DEG, pathway, prioritization. T1 builds the causal DAG, validates with Mendelian randomization, perturbs in silico, and triages targets. Every step auditable. No handoffs."}
+    ]
+  },
+  {
+    id: "q4", number: 4, label: "Why We Win",
+    subtitle: "Better than the named competitors",
+    color: "#2D2D44",
+    headline: "What makes us better than our competitors.",
+    intro: "BiRAGAS is not fighting Recursion, Insilico, or Schrödinger for the same square of the board. It operates one square upstream — and that square is the one the FDA increasingly demands.",
+    bullets: [
+      {lead: "Upstream of the field.", body: "All named competitors operate at molecular design and optimization. BiRAGAS operates at causal target identification and validation — the highest-stakes step in the entire pipeline. Get this wrong and nothing downstream matters."},
+      {lead: "Causal, not correlational.", body: "Tempus, Foundation, and most genomics platforms produce association data. BiRAGAS produces causal claims, validated through MR, perturbation, and convergence across four independent biological streams."},
+      {lead: "Regulatory architecture as a product.", body: "Causal Confidence Scoring + auto-generated dossiers structured for FDA submission. Competitors must build this layer; we ship it."},
+      {lead: "Physician-scientist founder.", body: "BiRAGAS is founded and led by Dr. Mohamad Ayass — a physician-scientist who built the platform from clinical practice, understanding what physicians actually need from molecular evidence. That domain depth cannot be manufactured by a generalist AI lab."},
+      {lead: "Single integrated engine.", body: "Twenty-five modules in one reasoning engine versus a stack of point tools. Once a partner integrates BiRAGAS into their workflow and their regulatory filings, the switching cost is the dossier itself."},
+      {lead: "The layer competitors need.", body: "Recursion, Insilico, and Schrödinger need a causal target layer they don't have. Long-term, the most likely outcome is partnership or acquisition, not direct competition."}
+    ]
+  },
+  {
+    id: "q5", number: 5, label: "Who We Sell To",
+    subtitle: "Three tiers of customer",
+    color: "#5C3D2E",
+    headline: "Who are we going to sell this to.",
+    intro: "Each tier entered through a different module, each compounding into the next.",
+    bullets: [
+      {lead: "Big Pharma (enterprise license).", body: "Full BiRAGAS platform license, enterprise-wide. 270+ pharma and biotech companies now run active AI drug-discovery programs (up from fewer than 80 in 2020). Each one is a candidate."},
+      {lead: "Mid-size biotechs (modular).", body: "Modular per-program licensing — start with one Causal Engine on a single program, expand to multi-omics and temporal, deepen into T1 causal validation as targets advance."},
+      {lead: "CROs and Academic Medical Centers.", body: "Project-based access. Lower revenue per account but powerful for distribution, publication, and grant-funded pipelines."},
+      {lead: "Companion-diagnostics co-dev partners.", body: "Top-20 pharma co-development of first-in-class companion diagnostics (FLT3 / IDH / menin AML; autoimmune biologic responder). Upfront + milestones + per-test royalty."},
+      {lead: "Grant-funded researchers.", body: "CPRIT, NIH, DOD, and academic-medical-center grants. Pipeline value $1.5M to $10M per program, non-dilutive."},
+      {lead: "Aptamer platform customers.", body: "Independent commercial track: diagnostics, therapeutics, food safety (validated peanut-allergen neutralization). Different buyers, shorter sales cycles, de-risks the platform story."},
+      {lead: "CLIA-certified lab clients.", body: "Direct clinical revenue from the CLIA-certified Ayass Bioscience laboratory — transcriptomic profiling services running today."}
+    ]
+  },
+  {
+    id: "q6", number: 6, label: "Revenue Streams",
+    subtitle: "Existing, MasterPlan, and projected",
+    color: "#1E3A5F",
+    headline: "Revenue streams — existing and projected.",
+    intro: "Three time horizons, eight revenue lines.",
+    bullets: [
+      {lead: "Today — CLIA lab.", body: "CLIA-certified clinical laboratory revenue (transcriptomic profiling, running)."},
+      {lead: "Today — Aptamer platform.", body: "Aptamer commercial pipeline serving diagnostics and food-safety applications."},
+      {lead: "Today — Services.", body: "Service contracts and consulting against the BiRAGAS engine."},
+      {lead: "Active MasterPlan (30-day · $1M).", body: "Track A: CPRIT grant $1.5–10M (deadlines Apr 7–16). Track B: pharma services $500K. Track C: platform licensing $300K. Track D: investor SAFE $500K–1M. Track E: CLIA lab $200K."},
+      {lead: "Projected — Platform licensing.", body: "Modular SaaS-adjacent licensing across pharma, biotech, and AMCs."},
+      {lead: "Projected — Companion-Dx co-development.", body: "Top-20 pharma upfront + milestones + per-test royalty."},
+      {lead: "Projected — $20M PPM offering.", body: "Asset-participation interests in the BiRAGAS software asset (separate from company equity)."},
+      {lead: "Projected — Year-5 ARR base case: $287M.", body: "Cross-vertical revenue mapping spanning AI drug discovery, AML, DKD, wound care / AMR, pancreatic, melanoma, wellness, autoimmune, Alzheimer, and agentic AI verticals."}
+    ]
+  },
+  {
+    id: "q7", number: 7, label: "External Validation",
+    subtitle: "Partners and validators already in place",
+    color: "#3F2A56",
+    headline: "Partners providing external validation.",
+    intro: "BiRAGAS does not validate itself by claim. It validates itself by association — already.",
+    bullets: [
+      {lead: "ATLAS Group consortium.", body: "Ten KOL physician-scientists across CPC / University of Colorado, McMaster / TaARI, Northwell, Mount Sinai, Georgetown, MapleLeaf7, APHP / Bichat, Johns Hopkins All Children's. Default expert panel for thrombosis and anticoagulation deliverables."},
+      {lead: "Academic Medical Centers.", body: "USC, UAMS, Harvard (×2), UC Irvine (×2). Active research collaborations spanning AML, diabetic nephropathy, melanoma, and computational pathology."},
+      {lead: "Disease-area collaborators.", body: "Dr. Christopher Hughes, Dr. Bryan Reynolds (computational pathology KOLs), Dr. Amal Alachkar (UCI), Dr. John Imig (UAMS, diabetic nephropathy), Dr. Andrzej Krolewski (Joslin/Harvard, DKD), Dr. John Kirkwood (melanoma), Dr. Aristotelis Tsirigos (NYU)."},
+      {lead: "Strategic and capital partners.", body: "Anthropic Health & Life Sciences collaboration. Buchalter legal counsel. CEA WorldWide. Qatar Investment Authority discussions."},
+      {lead: "Published science.", body: "Peer-reviewed publications across transcriptomics, aptamer science, and case reports of treatment decisions guided by the BiRAGAS platform."}
+    ]
+  },
+  {
+    id: "q8", number: 8, label: "Money & Returns",
+    subtitle: "How much, by when, what investors make",
+    color: "#7A5A2E",
+    headline: "How will we make money — how much, by when, and how much do investors stand to make.",
+    intro: "The structure is built for a fast, accountable re-rate. Capital funds three discrete catalysts before the institutional Series A prices.",
+    bullets: [
+      {lead: "The instrument.", body: "SAFE bridge round. Y Combinator post-money form. 20% discount. No valuation cap. Rolling close. 1.25× share advantage layered on top of the discount."},
+      {lead: "① Commercial team build-out.", body: "Two senior pharma BD, one CCO, two field engineers, one reimbursement lead. Re-rating trigger: three pharma anchors signed plus first LDT commercial launch."},
+      {lead: "② Data partnership expansion.", body: "Two AMC master service agreements. Bio-RAG corpus expansion from 8.6M to 15M biological vectors. RWE access via two payer-aligned health systems."},
+      {lead: "③ First-in-class companion diagnostic.", body: "Top-20 pharma co-development for FLT3 / IDH / menin AML or autoimmune biologic-responder. Upfront + milestones + per-test royalty."},
+      {lead: "Re-rating math.", body: "Today: ~$60M post-money reference. After Catalyst ①: $110–140M (+1.5–2.5× platform multiple). After Catalyst ②: $150–180M (+0.5–1.0× incremental). After Catalyst ③: $350–500M (+2–3× commercial inflection)."},
+      {lead: "Distributions.", body: "8% non-compounded preferred return on the BiRAGAS PPM, then 85/15 split (Holder/Manager) on Net BiRAGAS Revenue."},
+      {lead: "Conversion math.", body: "A SAFE today converts against a ~5× re-rate, compounded by the 20% discount and 1.25× share advantage, in a 12-month execution window."},
+      {lead: "Liquidity events.", body: "Sale, exclusive license, or spin-out of the BiRAGAS Asset triggers waterfall. At Year-5 base-case $287M ARR, valuation multiples on biotech infrastructure SaaS imply a $3B+ outcome envelope."}
+    ]
+  },
+  {
+    id: "q9", number: 9, label: "Slam-Dunk Thesis",
+    subtitle: "Eight categories of de-risking",
+    color: "#2C2C2C",
+    headline: "What makes us a no-brainer, slam-dunk investment.",
+    intro: "Eight reasons — each a different category of de-risking.",
+    bullets: [
+      {lead: "① Already built.", body: "Twenty-five modules. Eight causal engines. The technology exists, runs, and produces source-linked outputs. The bet is on commercialization, not invention."},
+      {lead: "② $23M self-funded.", body: "Founder Dr. Mohamad Ayass self-funded $23M of R&D over 15 years. No cap-table baggage. No early dilution. The asset comes in clean."},
+      {lead: "③ Regulatory tailwind.", body: "FDA explicitly requires mechanistic causal evidence. BiRAGAS architecturally produces it. Other platforms must retrofit."},
+      {lead: "④ $44B market at inflection.", body: "$3.1B today, $43.9B by 2035, 30%+ CAGR. Top-five players hold only 11.8% share. The infrastructure layer is unclaimed."},
+      {lead: "⑤ Three catalysts, twelve months.", body: "Three concrete milestones, each a discrete re-rating event. Investors can verify each one before the next gate closes."},
+      {lead: "⑥ Pre-validated by KOLs.", body: "ATLAS Group, six academic medical centers, peer-reviewed publications, and a CLIA-certified clinical laboratory. Not a pitch-deck claim — an existing network."},
+      {lead: "⑦ Land-and-expand commercial arc.", body: "Modular T2 entry → enterprise T1 expansion → T3 integration lock-in. Switching costs compound through the partner's regulatory filings."},
+      {lead: "⑧ Asset-participation structure.", body: "BiRAGAS PPM Units are fractional beneficial interests in the BiRAGAS Software Asset, not equity in Ayass Bioscience LLC. Clean alignment, cleaner liquidity story."}
+    ],
+    manifesto: [
+      "We're not building another AI that finds associations.",
+      "We're building the infrastructure that finally tells biology's actual story."
+    ]
+  }
+];
+
+function Bullet({ lead, body, color }) {
+  return (
+    <div style={{
+      background: "#0F0F0F",
+      border: "1px solid #222",
+      borderLeft: `3px solid ${color}`,
+      borderRadius: 4,
+      padding: "12px 16px",
+      marginBottom: 10
+    }}>
+      <div style={{ fontSize: 14, color: "#F5F0E8", fontWeight: 700, letterSpacing: "-0.2px", marginBottom: 4 }}>
+        {lead}
+      </div>
+      <div style={{ fontSize: 14, color: "#C8C4BC", lineHeight: 1.7 }}>
+        {body}
+      </div>
+    </div>
+  );
+}
+
+function Playbook() {
+  const [activeSection, setActiveSection] = useState(0);
+  const [audioOn, setAudioOn] = useState(false);
+  const audioRef = useRef(null);
+
+  useEffect(() => {
+    const boot = document.getElementById("boot");
+    if (boot) boot.style.display = "none";
+  }, []);
+
+  useEffect(() => {
+    const a = audioRef.current;
+    if (!a) return;
+    if (!audioOn) { a.pause(); return; }
+    const src = `audio/${sections[activeSection].id}.mp3`;
+    if (a.src.indexOf(sections[activeSection].id + ".mp3") === -1) {
+      a.src = src;
+    }
+    a.play().catch(() => {});
+  }, [activeSection, audioOn]);
+
+  const section = sections[activeSection];
+
+  return (
+    <div style={{
+      fontFamily: "'Georgia', 'Times New Roman', serif",
+      background: "#0A0A0A",
+      minHeight: "100vh",
+      color: "#E8E4DC",
+      display: "flex",
+      flexDirection: "column"
+    }}>
+      {/* Header */}
+      <div style={{
+        background: "linear-gradient(135deg, #0A0A0A 0%, #1A0A00 100%)",
+        borderBottom: "1px solid #333",
+        padding: "28px 40px 20px"
+      }}>
+        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+          <div>
+            <div style={{ fontSize: 11, letterSpacing: "0.25em", color: "#888", textTransform: "uppercase", marginBottom: 6, fontFamily: "monospace" }}>
+              AYASS BIOSCIENCE · BIRAGAS PLATFORM
+            </div>
+            <h1 style={{ margin: 0, fontSize: 28, fontWeight: 700, color: "#F5F0E8", letterSpacing: "-0.5px" }}>
+              Investors Elevator Pitch · Q&A Playbook
+            </h1>
+            <div style={{ fontSize: 13, color: "#999", marginTop: 4, fontStyle: "italic" }}>
+              Nine answers. One thesis. One platform that finally tells biology's actual story.
+            </div>
+          </div>
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <button onClick={() => setAudioOn(!audioOn)} style={{
+              background: audioOn ? "#C8102E" : "transparent",
+              color: audioOn ? "#fff" : "#888",
+              border: `1px solid ${audioOn ? "#C8102E" : "#444"}`,
+              padding: "7px 14px",
+              borderRadius: 4,
+              cursor: "pointer",
+              fontSize: 12,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              fontFamily: "monospace",
+              display: "flex",
+              alignItems: "center",
+              gap: 6
+            }} title={audioOn ? "Audio narration on — auto-plays on section change" : "Audio narration off"}>
+              <span>{audioOn ? "🔊" : "🔇"}</span>
+              <span>{audioOn ? "ON" : "OFF"}</span>
+            </button>
+            <audio ref={audioRef} preload="auto" />
+          </div>
+        </div>
+      </div>
+
+      <div style={{ display: "flex", flex: 1, minHeight: 0 }}>
+        {/* Sidebar */}
+        <div style={{
+          width: 240,
+          background: "#111",
+          borderRight: "1px solid #222",
+          padding: "20px 0",
+          flexShrink: 0
+        }}>
+          {sections.map((s, i) => (
+            <button key={s.id} onClick={() => setActiveSection(i)} style={{
+              display: "block",
+              width: "100%",
+              textAlign: "left",
+              background: activeSection === i ? "#1A1A1A" : "transparent",
+              border: "none",
+              borderLeft: `3px solid ${activeSection === i ? s.color : "transparent"}`,
+              padding: "14px 22px",
+              cursor: "pointer",
+              fontFamily: "inherit"
+            }}>
+              <div style={{
+                fontSize: 10,
+                letterSpacing: "0.2em",
+                color: activeSection === i ? s.color : "#555",
+                textTransform: "uppercase",
+                fontFamily: "monospace",
+                marginBottom: 3
+              }}>
+                Q{String(s.number).padStart(2, "0")} / 09
+              </div>
+              <div style={{
+                fontSize: 13,
+                color: activeSection === i ? "#F5F0E8" : "#888",
+                fontWeight: activeSection === i ? 600 : 400
+              }}>
+                {s.label}
+              </div>
+            </button>
+          ))}
+        </div>
+
+        {/* Main */}
+        <div style={{ flex: 1, padding: "36px 44px", overflowY: "auto", maxWidth: 980 }}>
+          <div style={{
+            fontSize: 10,
+            letterSpacing: "0.25em",
+            color: section.color,
+            textTransform: "uppercase",
+            fontFamily: "monospace",
+            marginBottom: 6
+          }}>
+            Question {String(section.number).padStart(2, "0")} · {section.subtitle}
+          </div>
+          <h2 style={{
+            fontSize: 24,
+            fontWeight: 700,
+            color: "#F5F0E8",
+            margin: "0 0 14px",
+            letterSpacing: "-0.3px",
+            lineHeight: 1.3
+          }}>
+            {section.headline}
+          </h2>
+          <div style={{ fontSize: 14, color: "#C8C4BC", lineHeight: 1.7, marginBottom: 20, fontStyle: "italic" }}>
+            {section.intro}
+          </div>
+
+          {section.bullets.map((b, idx) => (
+            <Bullet key={idx} lead={b.lead} body={b.body} color={section.color} />
+          ))}
+
+          {section.footnote && (
+            <div style={{
+              marginTop: 18,
+              padding: "12px 16px",
+              background: "#0A0A14",
+              borderLeft: `3px solid ${section.color}`,
+              fontSize: 13,
+              color: "#999",
+              fontStyle: "italic",
+              borderRadius: 4
+            }}>
+              {section.footnote}
+            </div>
+          )}
+
+          {section.manifesto && (
+            <div style={{ marginTop: 32, paddingTop: 24, borderTop: "1px solid #222", textAlign: "center" }}>
+              {section.manifesto.map((line, idx) => (
+                <div key={idx} style={{
+                  fontSize: 18,
+                  color: idx === section.manifesto.length - 1 ? "#C8102E" : "#C8C4BC",
+                  fontStyle: "italic",
+                  letterSpacing: "-0.2px",
+                  lineHeight: 1.5,
+                  marginBottom: 6
+                }}>
+                  {line}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Nav */}
+          <div style={{ display: "flex", justifyContent: "space-between", marginTop: 32, paddingTop: 24, borderTop: "1px solid #222" }}>
+            <button
+              onClick={() => setActiveSection(Math.max(0, activeSection - 1))}
+              disabled={activeSection === 0}
+              style={{
+                background: "transparent",
+                border: "1px solid #333",
+                color: activeSection === 0 ? "#444" : "#888",
+                padding: "9px 20px",
+                borderRadius: 4,
+                cursor: activeSection === 0 ? "default" : "pointer",
+                fontSize: 12,
+                fontFamily: "monospace",
+                letterSpacing: "0.1em"
+              }}
+            >← Previous</button>
+            <button
+              onClick={() => setActiveSection(Math.min(sections.length - 1, activeSection + 1))}
+              disabled={activeSection === sections.length - 1}
+              style={{
+                background: activeSection === sections.length - 1 ? "transparent" : section.color,
+                border: `1px solid ${activeSection === sections.length - 1 ? "#333" : section.color}`,
+                color: activeSection === sections.length - 1 ? "#444" : "#fff",
+                padding: "9px 20px",
+                borderRadius: 4,
+                cursor: activeSection === sections.length - 1 ? "default" : "pointer",
+                fontSize: 12,
+                fontFamily: "monospace",
+                letterSpacing: "0.1em"
+              }}
+            >Next →</button>
+          </div>
+        </div>
+      </div>
+
+      <div style={{
+        borderTop: "1px solid #222",
+        padding: "14px 40px",
+        fontSize: 11,
+        color: "#666",
+        fontFamily: "monospace",
+        letterSpacing: "0.1em",
+        textTransform: "uppercase",
+        display: "flex",
+        justifyContent: "space-between",
+        flexWrap: "wrap",
+        gap: 8
+      }}>
+        <div>BiRAGAS · Ayass Bioscience · Investors Elevator Pitch · Q&A</div>
+        <div>9 questions · 9 answers · audio narration</div>
+      </div>
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<Playbook />);
+</script>
+</body>
+</html>
